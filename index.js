@@ -43,6 +43,7 @@ module.exports = function makeGunFetch (opts = {}) {
         request.data = getTheBody
         delete request.body
       }
+      request.transformResponse = []
 
     //   const res = await new Promise((resolve, reject) => {
     //     if(hostname.endsWith('.onion')){
@@ -64,7 +65,7 @@ module.exports = function makeGunFetch (opts = {}) {
     //     }
     // })
     const res = await tor.request(request)
-    return {statusCode: res.statusCode, headers: res.headers, data: [res.data]}
+    return {statusCode: res.status, headers: res.headers, data: [res.data]}
     } catch (e) {
       return { statusCode: 500, headers: {}, data: [JSON.stringify(e)]}
     }
