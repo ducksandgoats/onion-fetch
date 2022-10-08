@@ -1,9 +1,13 @@
 const makeFetch = require('make-fetch')
+const torAxios = require('tor-axios')
 
-module.exports = function makeOnionFetch (opts = {}) {
+module.exports = function makeGunFetch (opts = {}) {
   const DEFAULT_OPTS = { timeout: 30000 }
   const finalOpts = { ...DEFAULT_OPTS, ...opts }
-  const tor = require('tor-request')
+  const tor = torAxios.torSetup({
+    ip: 'localhost',
+    port: 9050
+  })
   
   const useTimeOut = finalOpts.timeout
 
@@ -25,25 +29,16 @@ module.exports = function makeOnionFetch (opts = {}) {
 
       request.timeout = (request.headers['x-timer'] && request.headers['x-timer'] !== '0') || (mainURL.searchParams.has('x-timer') && mainURL.searchParams.get('x-timer') !== '0') ? Number(request.headers['x-timer'] || mainURL.searchParams.get('x-timer')) * 1000 : useTimeOut
 
-      // request.transformResponse = x => x
+      request.transformResponse = x => x
 
-      // if(request.method === 'POST' || request.method === 'PATCH' || request.method === 'PUT' || request.method === 'DELETE'){
-      //   const getTheBody = request.body
-      //   request.data = getTheBody
-      //   delete request.body
-      // }
+      if(request.method === 'POST' || request.method === 'PATCH' || request.method === 'PUT' || request.method === 'DELETE'){
+        const getTheBody = request.body
+        request.data = getTheBody
+        delete request.body
+      }
 
-      const res = await new Promise((resolve, reject) => {
-        tor.request(request.url, request, (error, response, body) => {
-          if(error){
-              reject(error)
-          } else {
-              resolve({statusCode: response.statusCode, headers: response.headers, data: body})
-          }
-      })
-    })
-    // await tor.request(request)
-    return {statusCode: res.statusCode, headers: res.headers, data: [res.data]}
+    const res = await tor.request(request)
+    return {statusCode: res.status, headers: res.headers, data: [res.data]}
     } catch (e) {
       return { statusCode: 500, headers: {}, data: [JSON.stringify(e)]}
     }
