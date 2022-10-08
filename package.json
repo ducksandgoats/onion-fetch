@@ -1,6 +1,6 @@
 {
   "name": "onion-fetch",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "tor-axios": "^1.0.11",
     "tor-request": "^3.1.0"
   }
 }
