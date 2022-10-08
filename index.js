@@ -23,7 +23,7 @@ module.exports = function makeGunFetch (opts = {}) {
         throw new Error(`request is not correct, protocol must be tor:// or tors://, or requires a method`)
       }
 
-      const mainProtocol = protocol.includes('s') ? 'https:' : 'http:'
+      const mainProtocol = mainURL.protocol.includes('s') ? 'https:' : 'http:'
 
       request.url = request.url.replace(mainURL.protocol, mainProtocol)
 
