@@ -43,7 +43,7 @@ module.exports = function makeOnionFetch (opts = {}) {
       })
     })
     // await tor.request(request)
-    return {statusCode: res.statusCode, headers: res.headers, data: [res.body]}
+    return {statusCode: res.statusCode, headers: res.headers, data: [res.data]}
     } catch (e) {
       return { statusCode: 500, headers: {}, data: [JSON.stringify(e)]}
     }
