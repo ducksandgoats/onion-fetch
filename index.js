@@ -63,7 +63,7 @@ module.exports = function makeGunFetch (opts = {}) {
     //         })
     //     }
     // })
-    const res = await tor.request(opts)
+    const res = await tor.request(request)
     return {statusCode: res.statusCode, headers: res.headers, data: [res.data]}
     } catch (e) {
       return { statusCode: 500, headers: {}, data: [JSON.stringify(e)]}
