@@ -15,6 +15,13 @@ module.exports = function makeGunFetch (opts = {}) {
     throw new Error('aborted')
   }
 
+  function sendTheData(theSignal, theData){
+    if(theSignal){
+      theSignal.removeEventListener('abort', takeCareOfIt)
+    }
+    return theData
+  }
+
   const fetch = makeFetch(async (request) => {
 
     if(request.signal){
@@ -44,15 +51,9 @@ module.exports = function makeGunFetch (opts = {}) {
       }
 
     const res = await tor.request(request)
-    if(request.signal){
-      request.signal.removeEventListener('abort', takeCareOfIt)
-    }
-    return {statusCode: res.status, headers: res.headers, data: [res.data]}
+    return sendTheData(request.signal, {statusCode: res.status, headers: res.headers, data: [res.data]})
     } catch (e) {
-      if(request.signal){
-        request.signal.removeEventListener('abort', takeCareOfIt)
-      }
-      return { statusCode: 500, headers: {}, data: [e.name]}
+      return sendTheData(request.signal, {statusCode: 500, headers: {}, data: [e.name]})
     }
   })
 
