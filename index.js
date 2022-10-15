@@ -8,12 +8,18 @@ module.exports = function makeGunFetch (opts = {}) {
     ip: 'localhost',
     port: 9050
   })
-  
   const useTimeOut = finalOpts.timeout
+
+  function takeCareOfIt(data){
+    console.log(data)
+    throw new Error('aborted')
+  }
 
   const fetch = makeFetch(async (request) => {
 
-    // const { url, method, headers, body } = request
+    if(request.signal){
+      request.signal.addEventListener('abort', takeCareOfIt)
+    }
 
     try {
 
@@ -38,9 +44,15 @@ module.exports = function makeGunFetch (opts = {}) {
       }
 
     const res = await tor.request(request)
+    if(request.signal){
+      request.signal.removeEventListener('abort', takeCareOfIt)
+    }
     return {statusCode: res.status, headers: res.headers, data: [res.data]}
     } catch (e) {
-      return { statusCode: 500, headers: {}, data: [JSON.stringify(e)]}
+      if(request.signal){
+        request.signal.removeEventListener('abort', takeCareOfIt)
+      }
+      return { statusCode: 500, headers: {}, data: [e.name]}
     }
   })
 
