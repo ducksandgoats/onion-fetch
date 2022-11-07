@@ -39,30 +39,9 @@ module.exports = function makeGunFetch (opts = {}) {
       }
 
       if(mainURL.hostname === '_'){
-        if(request.method === 'HEAD'){
-          const detectedPort = await detect(checkPort)
-          const isItRunning = checkPort !== detectedPort
-          return sendTheData(request.signal, {statusCode: 200, headers: {'X-Status': String(isItRunning)}, data: []})
-        } else if(request.method === 'GET'){
-          const detectedPort = await detect(checkPort)
-          const isItRunning = checkPort !== detectedPort
-          const {mainHead, mainData} = (() => {
-            if(request.headers.accept){
-              if(request.headers.accept.includes('text/html')){
-                return {mainHead: 'text/html; charset=utf-8', mainData: [`<html><head><title>${mainURL.toString()}</title></head><body><p>${isItRunning}</p></body></html>`]}
-              } else if(request.headers.accept.includes('application/json')){
-                return {mainHead: 'application/json; charset=utf-8', mainData: [JSON.stringify(isItRunning)]}
-              } else {
-                return {mainHead: 'text/plain; charset=utf-8', mainData: [String(isItRunning)]}
-              }
-            } else {
-              return {mainHead: 'text/plain; charset=utf-8', mainData: [String(isItRunning)]}
-            }
-          })()
-          return sendTheData(request.signal, {statusCode: 200, headers: {'Content-Type': mainHead}, data: mainData})
-        } else {
-          throw new Error('only valid method is HEAD and GET')
-        }
+        const detectedPort = await detect(checkPort)
+        const isItRunning = checkPort !== detectedPort
+        return sendTheData(request.signal, {statusCode: 200, headers: {'Content-Type': 'text/plain; charset=utf-8'}, data: [String(isItRunning)]})
       }
 
       const mainProtocol = mainURL.protocol.includes('s') ? 'https:' : 'http:'
@@ -88,6 +67,8 @@ module.exports = function makeGunFetch (opts = {}) {
             return {mainHead: 'text/html; charset=utf-8', mainData: [`<html><head><title>${request.url.toString()}</title></head><body><p>${e.name}</p></body></html>`]}
           } else if(request.headers.accept.includes('application/json')){
             return {mainHead: 'application/json; charset=utf-8', mainData: [JSON.stringify(e.name)]}
+          } else if(request.headers.accept.includes('text/plain')){
+            return {mainHead: 'text/plain; charset=utf-8', mainData: [e.name]}
           } else {
             return {mainHead: 'text/plain; charset=utf-8', mainData: [e.name]}
           }
