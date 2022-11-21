@@ -1,15 +1,13 @@
 const makeFetch = require('make-fetch')
-const torAxios = require('tor-axios')
 const detect = require('detect-port')
+const axios = require('axios');
+const SocksProxyAgent = require('socks-proxy-agent');
 
-module.exports = function makeGunFetch (opts = {}) {
+module.exports = function makeOnionFetch (opts = {}) {
   const DEFAULT_OPTS = { timeout: 30000 }
   const finalOpts = { ...DEFAULT_OPTS, ...opts }
-  const tor = torAxios.torSetup({
-    ip: 'localhost',
-    port: 9050
-  })
-  const checkPort = 9050
+  const mainData = {ip: 'localhost', port: 9050}
+  const tor = axios.create({ 'httpAgent': new SocksProxyAgent(`socks5h://${mainData.ip}:${mainData.port}`), 'httpsAgent': new SocksProxyAgent(`socks5h://${mainData.ip}:${mainData.port}`) })
   const useTimeOut = finalOpts.timeout
 
   function takeCareOfIt(data){
@@ -39,8 +37,8 @@ module.exports = function makeGunFetch (opts = {}) {
       }
 
       if(mainURL.hostname === '_'){
-        const detectedPort = await detect(checkPort)
-        const isItRunning = checkPort !== detectedPort
+        const detectedPort = await detect(mainData.port)
+        const isItRunning = mainData.port !== detectedPort
         return sendTheData(request.signal, {statusCode: 200, headers: {'Content-Type': 'text/plain; charset=utf-8'}, data: [String(isItRunning)]})
       }
 
