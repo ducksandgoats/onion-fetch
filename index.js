@@ -1,7 +1,7 @@
 const makeFetch = require('make-fetch')
 const detect = require('detect-port')
 const axios = require('axios');
-const SocksProxyAgent = require('socks-proxy-agent');
+const SocksProxyAgent = require('socks-proxy-agent').SocksProxyAgent
 
 module.exports = function makeOnionFetch (opts = {}) {
   const DEFAULT_OPTS = { timeout: 30000 }
