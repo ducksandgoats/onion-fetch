@@ -11,9 +11,7 @@ module.exports = async function makeOnionFetch (opts = {}) {
     
     try {
 
-      const mainURL = new URL(request.url)
-
-      if ((mainURL.protocol !== 'tor:' && mainURL.protocol !== 'tors:') || !request.method) {
+      if ((!request.url.startsWith('tor:') && !request.url.startsWith('tors:')) || !request.method) {
         throw new Error(`request is not correct, protocol must be tor:// or tors://, or requires a method`)
       }
 
@@ -23,9 +21,7 @@ module.exports = async function makeOnionFetch (opts = {}) {
         return {statusCode: 200, headers: {'Content-Type': 'text/plain; charset=utf-8'}, data: [String(isItRunning)]}
       }
 
-      const mainProtocol = mainURL.protocol.includes('s') ? 'https:' : 'http:'
-
-      request.url = request.url.replace(mainURL.protocol, mainProtocol)
+      request.url = request.url.replace('tor', 'http')
 
       request.timeout = {request: (request.headers['x-timer'] && request.headers['x-timer'] !== '0') || (mainURL.searchParams.has('x-timer') && mainURL.searchParams.get('x-timer') !== '0') ? Number(request.headers['x-timer'] || mainURL.searchParams.get('x-timer')) * 1000 : useTimeOut}
       request.agent = { 'http': new SocksProxyAgent(`socks5h://${mainData.ip}:${mainData.port}`), 'https': new SocksProxyAgent(`socks5h://${mainData.ip}:${mainData.port}`) }
