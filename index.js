@@ -1,5 +1,5 @@
 module.exports = async function makeOnionFetch (opts = {}) {
-  const makeFetch = require('make-fetch')
+  const {makeFetch} = await import('make-fetch')
   const {got} = await import('got')
   const detect = require('detect-port')
   const SocksProxyAgent = require('socks-proxy-agent').SocksProxyAgent
