@@ -33,7 +33,7 @@ module.exports = async function makeOnionFetch (opts = {}) {
       if(mainURL.hostname === '_'){
         const detectedPort = await detect(mainData.port)
         const isItRunning = mainData.port !== detectedPort
-        return {statusCode: 200, headers: {'Content-Type': 'text/plain; charset=utf-8'}, data: [String(isItRunning)]}
+        return {status: 200, headers: {'Content-Type': 'text/plain; charset=utf-8'}, body: [String(isItRunning)]}
       }
 
       request.url = request.url.replace('tor', 'http')
@@ -50,7 +50,7 @@ module.exports = async function makeOnionFetch (opts = {}) {
       }
 
       const res = await got(request)
-      return sendTheData(signal, {statusCode: res.statusCode, headers: res.headers, data: [res.body]})
+      return sendTheData(signal, {status: res.statusCode, headers: res.headers, body: [res.body]})
   }
 
   async function handleTors(request) {
@@ -66,7 +66,7 @@ module.exports = async function makeOnionFetch (opts = {}) {
       if(mainURL.hostname === '_'){
         const detectedPort = await detect(mainData.port)
         const isItRunning = mainData.port !== detectedPort
-        return {statusCode: 200, headers: {'Content-Type': 'text/plain; charset=utf-8'}, data: [String(isItRunning)]}
+        return {status: 200, headers: {'Content-Type': 'text/plain; charset=utf-8'}, body: [String(isItRunning)]}
       }
 
       request.url = request.url.replace('tor', 'http')
@@ -83,7 +83,7 @@ module.exports = async function makeOnionFetch (opts = {}) {
       }
 
     const res = await got(request)
-    return sendTheData(signal, {statusCode: res.statusCode, headers: res.headers, data: [res.body]})
+    return sendTheData(signal, {status: res.statusCode, headers: res.headers, body: [res.body]})
   }
   
   router.any('tor://*/**', handleTor)
