@@ -26,9 +26,8 @@ module.exports = async function makeOnionFetch (opts = {}) {
     if(signal){
       signal.addEventListener('abort', takeCareOfIt)
     }
-      if ((!request.url.startsWith('tor:') && !request.url.startsWith('tors:')) || !request.method) {
-        throw new Error(`request is not correct, protocol must be tor:// or tors://, or requires a method`)
-      }
+
+    const mainURL = new URL(url)
 
       if(mainURL.hostname === '_'){
         const detectedPort = await detect(mainData.port)
@@ -59,9 +58,8 @@ module.exports = async function makeOnionFetch (opts = {}) {
     if(signal){
       signal.addEventListener('abort', takeCareOfIt)
     }
-      if ((!request.url.startsWith('tor:') && !request.url.startsWith('tors:')) || !request.method) {
-        throw new Error(`request is not correct, protocol must be tor:// or tors://, or requires a method`)
-      }
+
+    const mainURL = new URL(url)
 
       if(mainURL.hostname === '_'){
         const detectedPort = await detect(mainData.port)
