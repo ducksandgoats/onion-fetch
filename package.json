@@ -1,6 +1,6 @@
 {
   "name": "onion-fetch",
-  "version": "22.0.2",
+  "version": "22.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
