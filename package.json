@@ -1,6 +1,6 @@
 {
   "name": "onion-fetch",
-  "version": "22.0.1",
+  "version": "22.0.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -11,8 +11,8 @@
   "license": "ISC",
   "dependencies": {
     "detect-port": "^1.5.1",
-    "got": "^12.5.3",
     "make-fetch": "github:ducksandgoats/make-fetch",
+    "node-fetch": "^3.3.0",
     "socks-proxy-agent": "^7.0.0"
   }
 }
