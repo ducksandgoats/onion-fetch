@@ -22,9 +22,9 @@ module.exports = async function makeOnionFetch (opts = {}) {
   }
 
 function useAgent(_parsedURL) {
-		if (_parsedURL.protocol === 'http:') {
+		if (_parsedURL.protocol === 'tor:') {
 			return mainAgents.http;
-		} else if(_parsedURL.protocol === 'https:'){
+		} else if(_parsedURL.protocol === 'tors:'){
 			return mainAgents.https;
     } else {
       throw new Error('protocol is not valid')
