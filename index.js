@@ -5,7 +5,7 @@ module.exports = async function makeOnionFetch (opts = {}) {
   const detect = require('detect-port')
   const SocksProxyAgent = require('socks-proxy-agent').SocksProxyAgent
   const finalOpts = { timeout: 30000, ...opts }
-  const mainData = {ip: '127.0.0.1', port: 9050}
+  const mainData = {ip: '127.0.0.1', port: finalOpts.port || 9050}
   const useTimeOut = finalOpts.timeout
   const mainAgents = { 'http': new SocksProxyAgent(`socks5h://${mainData.ip}:${mainData.port}`), 'https': new SocksProxyAgent(`socks5h://${mainData.ip}:${mainData.port}`) }
 
